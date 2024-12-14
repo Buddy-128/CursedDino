@@ -18,3 +18,4 @@ the C and raylib version
 # TODO
 1. add endless mode
 2. add some extras
+3. CMake support
