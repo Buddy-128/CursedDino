@@ -1,32 +1,42 @@
-/* known bugs:  bad positioning of texts, finish the game */
-
-/* my dreams: finished working game, endless mode, local coop or versus mode?? */
-
-
 #include "raylib.h"
 
-typedef enum GameScreen { LOGO = 0, MENU, GAME, LOSE, WIN} GameScreen;
+typedef enum GameScreen { LOGO = 0, MENU, SELECT, GAME, GAME1, LOSE, WIN} GameScreen;
 
 int main(void) 
 {
-	const int screenWidth = 640;
-	const int screenHeight = 480;
-
-	float playerY = screenHeight/2;
-	float obstacleX = screenWidth;
-	float obstacle1X = screenWidth + 120;
+	float playerY = 240;
+	float obstacleX = 640;
+	float obstacle1X = 760;
 
 	int frameCounter = 0;
 	int gameState = 0;
-   
-	bool collision;
-	bool collision1;
+	
+	bool close = false;
 
 	GameScreen currentScreen = LOGO;
 
-	InitWindow(screenWidth, screenHeight, "game");
+	Color btColor0 = GREEN;
+	Color btColor1 = GREEN;
+	Color btColor2 = GREEN;
+	Color btColor3 = GREEN;
+
+	InitWindow(640, 480, "Cursed Dino");
 
 	SetTargetFPS(60);
+
+	void StartGame(int type) 
+	{
+		gameState = 0;
+		frameCounter = 0;
+
+		playerY = 240;
+
+		obstacleX = 640;
+		obstacle1X = 760;
+
+		if (type == 1) {currentScreen = GAME;}
+        	
+	}
 
 
 	/*place for loading textures and stuff (trust me this is the only place)*/
@@ -38,6 +48,36 @@ int main(void)
 	
 	while(!WindowShouldClose()) 
 	{
+		if (close) {break;}
+		
+		/*for entire program*/
+		Vector2 mousePos = GetMousePosition();
+		Rectangle cursor = {(float)mousePos.x, (float)mousePos.y, 5, 5};
+		
+		/*for MENU*/
+		Rectangle Button = {260, 220, 120, 60};
+		Rectangle Button1 = {260, 300, 120, 60};
+
+		bool onbt0 = CheckCollisionRecs(cursor, Button);
+		bool onbt1 = CheckCollisionRecs(cursor, Button1);
+		
+		/*for GAME*/
+		Rectangle player = {120, playerY, 30, 30};
+               	Rectangle obstacle = {obstacleX, 280, 60, 200};
+		Rectangle obstacle1 = {obstacle1X, 0, 60, 200};
+
+       		bool collision = CheckCollisionRecs(player, obstacle);
+		bool collision1 = CheckCollisionRecs(player, obstacle1);
+		
+		/*for WIN and LOSE (they share this)*/
+		Rectangle Button2 = {260, 220, 120, 60};
+		Rectangle Button3 = {260, 300, 120, 60};
+			
+		bool onbt2 = CheckCollisionRecs(cursor, Button2);
+		bool onbt3 = CheckCollisionRecs(cursor, Button3);	
+
+
+		/* this switch function is made for the logic of the game */
 		switch(currentScreen) 
 		{
 			case LOGO: 
@@ -51,19 +91,48 @@ int main(void)
 
 			case MENU: 
 			{
-				if(IsKeyDown(KEY_ENTER)) {
-					gameState = 0;
-					playerY = screenHeight/2;
-					obstacleX = screenWidth;
-					obstacle1X = screenWidth + 120;
-					frameCounter = 0;
-					currentScreen = GAME;
+				if (onbt0) {
+					btColor0 = DARKGREEN;
+
+					if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+						StartGame(1);
+					}	
+				}
+				else {
+					btColor0 = GREEN;
+				}
+
+				if (onbt1) {
+					btColor1 = DARKGREEN;
+
+					if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+						close = true;
+					}
+				}
+				else {
+					btColor1 = GREEN;
 				}
 			}break;
 
 			case GAME: 
 			{
 				frameCounter++;
+
+	       			if (IsKeyDown(KEY_SPACE)) {playerY -= 5.0f;}
+				else {playerY += 3.0f;}
+      
+               			obstacleX -= 5.0f;
+				obstacle1X -= 5.0f;
+     
+    			        if (obstacleX < -60) {obstacleX = 640;}
+
+				if (obstacle1X < -60) {obstacle1X = 760;}
+
+				if (playerY < 0) {playerY = 0;}
+
+				if (playerY > 450) {playerY = 450;}
+
+        			if (collision || collision1) {gameState = 2;}
 
 				if(frameCounter > 1800) {
 					gameState = 1;
@@ -79,30 +148,58 @@ int main(void)
 
 			case WIN: 
 			{
-				if(IsKeyDown(KEY_ENTER)) {
-					gameState = 0;
-					playerY = screenHeight/2;
-					obstacleX = screenWidth;
-					obstacle1X = screenWidth + 120;
-					frameCounter = 0;
-					currentScreen = GAME;
+				if (onbt2) {
+					btColor2 = DARKGREEN;
+
+					if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+						StartGame(1);
+					}	
 				}
+				else {
+					btColor2 = GREEN;
+				}
+
+				if (onbt3) {
+					btColor3 = DARKGREEN;
+
+					if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+						currentScreen = MENU;
+					}
+				}
+				else {
+					btColor3 = GREEN;
+				}
+
 			}break;
 
 			case LOSE: 
 			{
-				if(IsKeyDown(KEY_ENTER)) {
-					gameState = 0;
-					playerY = screenHeight/2;
-					obstacleX = screenWidth;
-					obstacle1X = screenWidth + 120;
-					frameCounter = 0;
-					currentScreen = GAME;
+				if (onbt2) {
+					btColor2 = DARKGREEN;
+
+					if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+						StartGame(1);
+					}	
+				}
+				else {
+					btColor2 = GREEN;
+				}
+
+				if (onbt3) {
+					btColor3 = DARKGREEN;
+
+					if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+						currentScreen = MENU;
+					}
+				}
+				else {
+					btColor3 = GREEN;
 				}
 			}break;
 		}
 
 	BeginDrawing();
+		/* this is the switch case made just for RENDERING! */
 		switch(currentScreen) {
        		case LOGO: 
 		{
@@ -116,64 +213,53 @@ int main(void)
 	  	{
 			ClearBackground(SKYBLUE);
 	        	DrawTextEx(font, "Cursed Dino 2", (Vector2){155, 60}, 60, 0, DARKGREEN);
-	        	DrawTextEx(font, "Press ENTER to play!", (Vector2){155, 240}, 40, 0, BLACK);
+	        	DrawRectangleRec(Button, btColor0);
+			DrawTextEx(font, "Play", (Vector2){290, 227}, 40, 0, BLACK);
+			DrawRectangleRec(Button1, btColor1);
+			DrawTextEx(font, "Quit", (Vector2){290, 307}, 40, 0, BLACK);
+
+
 		}break;
 
 	 	case GAME: 
 		{
-	       		Rectangle player = {120, playerY, 30, 30};
-               		Rectangle obstacle = {obstacleX, 280, 60, 200};
-			Rectangle obstacle1 = {obstacle1X, 0, 60, 200};
-       			collision = CheckCollisionRecs(player, obstacle);
-			collision1 = CheckCollisionRecs(player, obstacle1);
-
-       			if (IsKeyDown(KEY_SPACE)) {playerY -= 5.0f;}
-			else {playerY += 3.0f;}
-      
-               		obstacleX -= 5.0f;
-			obstacle1X -= 5.0f;
-     
-    		        if (obstacleX < -60) {obstacleX=screenWidth;}
-
-			if (obstacle1X < -60) {obstacle1X=screenWidth + 120;}
-
-			if (playerY < 0) {playerY = 0;}
-
-			if (playerY > 450) {playerY = 450;}
-
-        		if (collision || collision1) {gameState = 2;}
-
-	       		ClearBackground(SKYBLUE);
+			ClearBackground(SKYBLUE);
 			DrawTextEx(font,"Fly with SPACE.", (Vector2){60, 60}, 20, 0, BLACK);
-			DrawTexture(dino, (int)player.x, (int)player.y, RAYWHITE);
-			DrawTexture(wall, (int)obstacle.x, (int)obstacle.y, RAYWHITE);
-			DrawTexture(wall, (int)obstacle1.x, (int)obstacle1.y, RAYWHITE);
+			DrawTexture(dino, (int)player.x, playerY, RAYWHITE);
+			DrawTexture(wall, obstacleX, (int)obstacle.y, RAYWHITE);
+			DrawTexture(wall, obstacle1X, (int)obstacle1.y, RAYWHITE);
 
 	        }break;
 
 	        case WIN: 
 		{
-			ClearBackground(SKYBLUE);
+	       		ClearBackground(SKYBLUE);
+			DrawTextEx(font, "YOU WON!!!", (Vector2){195, 120}, 60, 0, GOLD);
+			DrawRectangleRec(Button2, btColor2);
+	       		DrawTextEx(font, "Again", (Vector2){280, 227}, 40, 0, BLACK);
+			DrawRectangleRec(Button3, btColor3);
+			DrawTextEx(font, "Menu", (Vector2){280, 307}, 40, 0, BLACK);
 
-	        	DrawTextEx(font, "YOU WON!!!", (Vector2){200, 120}, 60, 0, GOLD);
-	       		DrawTextEx(font, "Press ENTER to play again or ESCAPE to quit.", (Vector2){150, 240}, 20, 0, BLACK);
 	    	}break;
 
 	    	case LOSE: 
-			{
+		{
 			ClearBackground(SKYBLUE);
-
-	       		DrawTextEx(font, "YOU LOST!!!", (Vector2){195, 120}, 60, 0, RED);
-	       		DrawTextEx(font, "Press ENTER to play again or ESCAPE to quit.", (Vector2){150, 240}, 20, 0, BLACK);
+			DrawTextEx(font, "YOU LOST!!!", (Vector2){195, 120}, 60, 0, RED);
+			DrawRectangleRec(Button2, btColor2);
+	       		DrawTextEx(font, "Again", (Vector2){280, 227}, 40, 0, BLACK);	
+			DrawRectangleRec(Button3, btColor3);
+			DrawTextEx(font, "Menu", (Vector2){280, 307}, 40, 0, BLACK);
 	    	}break;
 	}
 	EndDrawing();
 	}
-
+	
 	UnloadTexture(dino);
 	UnloadTexture(wall);
 	UnloadFont(font);
-    
+	
 	CloseWindow();
+	
 	return 0;
 }
