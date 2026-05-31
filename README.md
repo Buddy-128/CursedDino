@@ -1,7 +1,6 @@
 # CursedDino
-A 2d platformer funny game coded in C with raylib.
-Inspired of of http://curseddino.kvalitne.cz which is my first webgame.
-As of now the game is pretty much finished
+A 2d platformer funny game made in C with raylib.
+Inspired by my first webgame.
 
 ![pic01](https://github.com/user-attachments/assets/e50eb76e-ea0d-49db-9125-09c6a4591d61)
 
@@ -15,7 +14,7 @@ the C and raylib version
 1. functional scene system
 2. 30 second long challenge mode
 3. endless mode
+4. pretty messy code
 
 # TODO
-1. more challenges
-2. add some extras
+1. code cleanup
