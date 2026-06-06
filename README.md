@@ -10,11 +10,5 @@ original game
 
 the C and raylib version
 
-# In game
-1. functional scene system
-2. 30 second long challenge mode
-3. endless mode
-4. pretty messy code
-
-# TODO
-1. code cleanup
+# Building
+There is a Makefile for gcc and mingw. After building the executable add the assets directory to the same directory as the executable.
