@@ -2,6 +2,8 @@
 
 //local
 #include "game.h"
+#include "menus.h"
+#include "dino.h"
 
 //the ray stuff
 #include "raylib.h"
@@ -11,12 +13,19 @@ void
 LoadScene(Scene scene)
 {
   switch (scene)
-  {
-    case SCENE_MENU:
-      //LoadMenu()
+  { //when i wrote this i relaized that my scene manager absolutely sucks in this game
+    case SCENE_LOGO:
+      LoadMenu();
     break;
-    case SCENE_GAME:
-      //LoadGame()
+    /*case SCENE_MENU:
+      LoadMenu();
+    break;*/
+    case SCENE_DINO:
+      LoadDino();
+    break;
+    /*case SCENE_END:
+      LoadMenu();
+    break;*/
   }
 }
 
@@ -25,11 +34,8 @@ UnloadScene(Scene scene)
 {
   switch (scene)
   {
-    case SCENE_MENU:
-      //UnloadMenu()
-    break;
-    case SCENE_GAME:
-      //UnloadGame()
+    case SCENE_DINO:
+      UnloadDino();
   }
 }
 
@@ -38,11 +44,11 @@ UpdateScene(Scene scene, double step)
 {
   switch (scene)
   {
-    case SCENE_MENU:
-      //UpdateMenu()
+    case SCENE_LOGO:
+      UpdateLogo(step);
     break;
-    case SCENE_GAME:
-      //UpdateGame()
+    case SCENE_DINO:
+      UpdateDino(step);
   }
 }
 
@@ -51,11 +57,17 @@ DrawScene(Scene scene)
 {
   switch (scene)
   {
-    case SCENE_MENU:
-      //DrawMenu()
+    case SCENE_LOGO:
+      DrawLogo();
     break;
-    case SCENE_GAME:
-      //DrawGame()
+    case SCENE_MENU:
+      DrawMenu();
+    break;
+    case SCENE_DINO:
+      DrawDino();
+    break;
+    case SCENE_END:
+      DrawEnd();
   }
 }
 

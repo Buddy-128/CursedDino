@@ -10,6 +10,8 @@ typedef struct Game
   float scale;
   Vector2 res;
   Scene curScene;
+  int highScore;
+  bool end;
 } Game;
 
 void LoadGame(void);
@@ -22,5 +24,12 @@ Vector2 GetWindowRes(void);
 
 Scene GetCurScene(void);
 void SetCurScene(Scene next);
+
+void LoadScore(void);
+void SaveScore(int score);
+int GetHighScore(void);
+
+void EndGame(void);
+bool ShouldGameEnd(void);
 
 #endif

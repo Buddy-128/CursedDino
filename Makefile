@@ -3,15 +3,15 @@
 CC = gcc
 
 # Define the target executable name
-TARGETLIN = bin/Game
-TARGETWIN = bin/Game.exe
+TARGETLIN = bin/CursedDino
+TARGETWIN = bin/CursedDino.exe
 DATE := $(shell date +%d.%m)
 
 # Define the source file
-SRC = src/main.c src/game.c src/scene.c src/entity.c 
+SRC = src/main.c src/game.c src/scene.c src/dino.c src/menus.c
 
 # Compiler flags
-CFLAGS = -Iexternal/raylib -Iexternal/raygui -Iexternal/cJSON -Iinclude
+CFLAGS = -Iexternal/raylib -Iexternal/raygui -Iinclude
 
 #libs
 LIBS = -Llib/linux -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -O2 

@@ -11,7 +11,7 @@ main()
   const double step = 1 / 60.0;
   double accu = 0; //accumulator that caps update at 60FPS
 
-	while(!WindowShouldClose()){
+	while(!WindowShouldClose() && !ShouldGameEnd()){
     float dt = GetFrameTime();
     if (dt > .25) dt = .25; //prevents game break if FPS small
     
@@ -26,7 +26,7 @@ main()
     }
 
 		BeginDrawing();
-      ClearBackground(BLACK);
+      ClearBackground(SKYBLUE);
 
       DrawScene(GetCurScene());
       
